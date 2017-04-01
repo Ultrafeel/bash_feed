@@ -1,22 +1,23 @@
 #!/bin/bash
 
-var0=0
-LIMIT=100
+#var0=0
+#LIMIT=100
+#"$var0" -lt "$LIMIT" 
 
 w=`cat config.ini`
 if [ "$w" -lt "1" ]
 then
 	w=1
 fi
-echo "wait preiod = $w "
-while [ "$var0" -lt "$LIMIT" ]
+echo "wait period = $w "
+while [ 1 ]
 do
-	echo "$var0 "
 	var0=`expr $var0 + 1`
+	echo " $var0."
 	wget http://www.pogoda.by/26850 -q -O - | iconv -t utf8 -f WINDOWS-1251\
 	|grep -Pzo "(?s)<h2>Фактическая погода</h2>(.*?)</td>"\
-	|  sed -rnz 's|.*</h2>(.*)</td>|_\1\_\n|gp' | sed "s/<br>/\n/g; s/<[^>]\+>//g"
-	sleep $var0 
+	|  sed -rnz 's|.*</h2>(.*)</td>|\1|gp' | sed "s/<br>/\n/g; s/<[^>]\+>//g"
+	sleep $w 
 done
 
 #<td valign="top">
