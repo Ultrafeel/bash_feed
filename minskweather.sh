@@ -11,13 +11,17 @@ then
 fi
 echo "wait period = $w "
 while [ 1 ]
-do
+do 
+	# tr - used for temporary change \n to some symbol that cannot appear
+	# and revert back
 	var0=`expr $var0 + 1`
 	echo " $var0."
 	wget http://www.pogoda.by/26850 -q -O - | iconv -t utf8 -f WINDOWS-1251\
 	|grep -Pzo "(?s)<h2>Фактическая погода</h2>(.*?)</td>"\
-	|  sed -rnz 's|.*</h2>(.*)</td>|\1|gp' | sed "s/<br>/\n/g; s/<[^>]\+>//g"
-	sleep $w 
+	| tr '\n' '\f'\
+	| sed -rn 's|.*</h2>(.*)</td>|_\1\_\f|gp' | sed "s/<br>/\f/g; s/<[^>]\+>//g"\
+	| tr '\f' '\n'\ 
+	sleep $w
 done
 
 #<td valign="top">
