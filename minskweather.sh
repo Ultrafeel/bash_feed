@@ -22,13 +22,15 @@ LIMIT=10
 
 
 while [ "$var0" -lt "$LIMIT" ]
-do
-	echo "$var0 "
+do 
+# tr - used for  temporary change \n to some symbol that cannot appear and revert back
+	#echo "$var0 "
 	var0=`expr $var0 + 1`
 	wget http://www.pogoda.by/26850 -q -O - | iconv -t utf8 -f WINDOWS-1251\
 	|grep -Pzo "(?s)<h2>Фактическая погода</h2>(.*?)</td>"\
-	|  sed -rnz 's|.*</h2>(.*)</td>|_\1\_\n|gp' | sed "s/<br>/\n/g; s/<[^>]\+>//g"
-	sleep 2
+	| tr '\n' '\f' \
+	|  sed -rn 's|.*</h2>(.*)</td>|_\1\_\f|gp' | sed "s/<br>/\f/g; s/<[^>]\+>//g"\
+	| tr '\f' '\n'  
 	#$(var0)=$(($(var0)+1))
 done
 
