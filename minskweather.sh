@@ -14,6 +14,9 @@ while [ 1 ]
 do 
 	# tr - used for temporary change \n to some symbol that cannot appear
 	# and revert back
+	#grep: (?s)
+	#match the remainder of the pattern with the following effective flags: 
+	#s modifier: single line. Dot matches newline characters
 	var0=`expr $var0 + 1`
 	echo " $var0."
 	wget http://www.pogoda.by/26850 -q -O - | iconv -t utf8 -f WINDOWS-1251\
